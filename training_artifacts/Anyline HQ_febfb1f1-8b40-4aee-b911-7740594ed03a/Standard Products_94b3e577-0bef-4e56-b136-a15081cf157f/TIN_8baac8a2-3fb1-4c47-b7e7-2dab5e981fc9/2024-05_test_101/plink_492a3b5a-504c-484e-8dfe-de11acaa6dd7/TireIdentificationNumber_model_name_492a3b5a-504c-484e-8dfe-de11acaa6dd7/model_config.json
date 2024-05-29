@@ -1,0 +1,157 @@
+{
+  "name": "tin_detector_plink_word_1",
+  "description": "Text Block VGG",
+  "model": {
+    "input_shape": [
+      null,
+      null,
+      3
+    ],
+    "architecture": "text_block",
+    "backbone": {
+      "trainable": true,
+      "vgg": {
+        "stage_filters": [
+          16,
+          32,
+          32,
+          64,
+          128
+        ],
+        "stage_counts": [
+          2,
+          2,
+          2,
+          2,
+          3
+        ]
+      }
+    },
+    "merge_filters": [
+      16,
+      8,
+      4,
+      0,
+      0
+    ],
+    "description": "Text block as with tire size"
+  },
+  "train": {
+    "batch_size": 32,
+    "epochs": 500,
+    "checkpoint": null,
+    "loss": {
+      "score_multiplier": 2.3,
+      "ohem": true,
+      "ohem_ratio": 3.0,
+      "border_multiplier": 5.0
+    },
+    "optimizer": {
+      "type": "radam",
+      "learning_rate": 0.001,
+      "beta_1": 0.9,
+      "beta_2": 0.999,
+      "epsilon": 1e-07,
+      "weight_decay": 0.0,
+      "sma_threshold": 5.0,
+      "total_steps": 0,
+      "warmup_proportion": 0.1,
+      "min_lr": 0.0,
+      "amsgrad": false
+    },
+    "weights": null,
+    "early_stopping_patience": 30
+  },
+  "data": {
+    "cache": false,
+    "shuffle_size": 2048,
+    "augmentation": {
+      "train_set": [
+        {
+          "type": "affine",
+          "rotation": 5.0,
+          "scale": [
+            0.5,
+            1.8
+          ]
+        },
+        {
+          "type": "divisible_pad",
+          "div_factors": [
+            4,
+            4
+          ],
+          "mode": "REFLECT"
+        },
+        {
+          "type": "random_crop",
+          "size": [
+            96,
+            400
+          ]
+        },
+        {
+          "type": "brightness_contrast",
+          "brightness": 0.1,
+          "contrast": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "type": "gaussian_blur",
+          "sigma": 1.0,
+          "prob": 0.1
+        },
+        {
+          "type": "random_flip_vertically",
+          "prob": 0.3
+        },
+        {
+          "type": "normalize_mean_std"
+        }
+      ],
+      "valid_set": [
+        {
+          "type": "divisible_pad",
+          "div_factors": [
+            4,
+            4
+          ],
+          "mode": "REFLECT"
+        },
+        {
+          "type": "center_crop",
+          "size": [
+            96,
+            400
+          ]
+        },
+        {
+          "type": "normalize_mean_std"
+        }
+      ],
+      "test_set": [
+        {
+          "type": "divisible_pad",
+          "div_factors": [
+            4,
+            4
+          ],
+          "mode": "REFLECT"
+        },
+        {
+          "type": "center_crop",
+          "size": [
+            96,
+            400
+          ]
+        },
+        {
+          "type": "normalize_mean_std"
+        }
+      ],
+      "num_parallel_calls": "autotune"
+    }
+  }
+}
